@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group('org.example')
-version('1.0-SNAPSHOT')
+group('dev.cross')
+version('1.0-ALPHA')
 
 repositories {
     mavenCentral()
@@ -23,10 +23,10 @@ test {
 jar {
     manifest {
         attributes "Manifest-Version": 1.0
-        attributes "Created-By": "The BTA Team"
-        attributes "Plugin-Class": "org.example.Example"
+        attributes "Created-By": "Cross"
+        attributes "Plugin-Class": "dev.cross.SimpleHomes"
         attributes "Plugin-Dependencies": ""
-        attributes "Plugin-Id": "example-plugin"
+        attributes "Plugin-Id": "simple-homes"
         attributes "Plugin-Version": "1.0.0"
     }
 }
