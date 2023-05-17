@@ -14,10 +14,13 @@ public class TickEvent implements com.bta.events.TickEvent {
     @Override
     public void onEvent() {
         if (System.currentTimeMillis() >= Utils.get().getBackup()) {
-            System.out.println(ChatColor.gray + "[" + ChatColor.orange + "Homes" + ChatColor.gray + "] " + ChatColor.orange + "Realized backup for all the homes.");
             Utils.get().setBackup(System.currentTimeMillis() + Config.get().getBackupTimer());
-            HomeList.get().save();
-            MinecraftServer.getInstance().serverCommandHandler.sendMessageToAllPlayers(ChatColor.gray + "[" + ChatColor.orange + "Homes" + ChatColor.gray + "] " + ChatColor.orange + "Realized backup for all the homes.");
+            if (Utils.get().isListChanged()) {
+                Utils.get().setListChanged(false);
+                HomeList.get().save();
+                MinecraftServer.getInstance().serverCommandHandler.sendMessageToAllPlayers(ChatColor.gray + "[" + ChatColor.orange + "Homes" + ChatColor.gray + "] " + ChatColor.orange + "Realized backup for all the homes.");
+                System.out.println(ChatColor.gray + "[" + ChatColor.orange + "Homes" + ChatColor.gray + "] " + ChatColor.orange + "Realized backup for all the homes.");
+            }
         }
 
     }

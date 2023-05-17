@@ -7,13 +7,14 @@ public class Utils {
     private long backup;
     private static Utils INSTANCE;
     private ArrayList<Home> homes;
-
+    private boolean listChanged;
     public static Utils get() {
         if (INSTANCE == null) { INSTANCE = new Utils(); }
         return INSTANCE;
     }
     private Utils() {
         homes = new ArrayList<>();
+        listChanged = true;
         backup = System.currentTimeMillis() + Config.get().getBackupTimer();
     }
 
@@ -37,6 +38,7 @@ public class Utils {
 
     public void addHome(Home i) {
         homes.add(i);
+        listChanged = true;
     }
 
     public void setList(ArrayList<Home> homes) {
@@ -68,6 +70,15 @@ public class Utils {
             return false;
         }
         homes.remove(home);
+        listChanged = true;
         return true;
+    }
+
+    public boolean isListChanged() {
+        return listChanged;
+    }
+
+    public void setListChanged(boolean listChanged) {
+        this.listChanged = listChanged;
     }
 }
