@@ -1,7 +1,8 @@
 package dev.cross.commands;
 
 import com.bta.util.CommandHandler;
-import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.*;
 import net.minecraft.src.command.ChatColor;
 import net.minecraft.src.command.Command;
 import net.minecraft.src.command.CommandSender;
@@ -46,10 +47,9 @@ public class HomeCommand implements CommandHandler {
                         if (p1MP.dimension != home.getLocation().dimension && handler instanceof ServerCommandHandler) {
                             ServerCommandHandler serverCommandHandler = (ServerCommandHandler)handler;
                             serverCommandHandler.minecraftServer.configManager.sendPlayerToOtherDimension(p1MP, home.getLocation().dimension);
-                            p1MP.playerNetServerHandler.teleportTo(home.getLocation().x, home.getLocation().y + 3, home.getLocation().z, p1MP.rotationYaw, p1MP.rotationPitch);
+                            p1MP.playerNetServerHandler.teleportTo(home.getLocation().x, home.getLocation().y, home.getLocation().z, p1MP.rotationYaw, p1MP.rotationPitch);
                             return true;
                         }
-
                         p1MP.playerNetServerHandler.teleportTo(home.getLocation().x, home.getLocation().y, home.getLocation().z, p1MP.rotationYaw, p1MP.rotationPitch);
                     } else {
                         sender.getPlayer().setLocationAndAngles(home.getLocation().x, home.getLocation().y, home.getLocation().z, sender.getPlayer().rotationYaw, sender.getPlayer().rotationPitch);

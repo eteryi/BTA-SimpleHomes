@@ -3,7 +3,7 @@ plugins {
 }
 
 group('dev.cross')
-version('1.0-ALPHA')
+version('1.0.1-ALPHA')
 
 repositories {
     mavenCentral()

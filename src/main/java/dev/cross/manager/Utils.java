@@ -1,19 +1,21 @@
 package dev.cross.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Utils {
 
     private long backup;
     private static Utils INSTANCE;
     private ArrayList<Home> homes;
+    private HashMap<String, ArrayList<Home>> values;
     private boolean listChanged;
     public static Utils get() {
         if (INSTANCE == null) { INSTANCE = new Utils(); }
         return INSTANCE;
     }
     private Utils() {
-        homes = new ArrayList<>();
+        values = new HashMap<>();
         listChanged = true;
         backup = System.currentTimeMillis() + Config.get().getBackupTimer();
     }
@@ -26,37 +28,38 @@ public class Utils {
         backup = b;
     }
     public ArrayList<Home> getHomesFromUsername(String s) {
-        ArrayList<Home> userHomes = new ArrayList<>();
+        ArrayList<Home> userHomes = values.get(s);
 
-        for (Home i : homes) {
-            if (i.getOwnerUsername().equalsIgnoreCase(s)) {
-                userHomes.add(i);
-            }
-        }
+        if (userHomes == null) {userHomes = new ArrayList<>();}
         return userHomes;
     }
 
     public void addHome(Home i) {
+        ArrayList<Home> homes = values.get(i.getOwnerUsername());
+        if (homes == null) {homes = new ArrayList<>();}
         homes.add(i);
+        values.put(i.getOwnerUsername(), homes);
         listChanged = true;
     }
 
     public void setList(ArrayList<Home> homes) {
-        this.homes = homes;
+        for (Home i : homes) {
+            addHome(i);
+        }
     }
 
     public ArrayList<Home> getList() {
-        return this.homes;
+        ArrayList<Home> allHomes = new ArrayList<>();
+        for (ArrayList<Home> i : this.values.values()) {
+            for (Home j : i) {
+                allHomes.add(j);
+            }
+        }
+        return allHomes;
     }
 
     public int homeAmount(String username) {
-        int r = 0;
-        for (int i = 0; i < homes.size(); i++) {
-            if (homes.get(i).getOwnerUsername().equalsIgnoreCase(username)) {
-                r++;
-            }
-        }
-        return r;
+        return getHomesFromUsername(username).size();
     }
 
     public boolean deleteHome(String owner, String homeName) {
@@ -69,6 +72,7 @@ public class Utils {
         if (home == null) {
             return false;
         }
+        ArrayList<Home> homes = getHomesFromUsername(owner);
         homes.remove(home);
         listChanged = true;
         return true;
@@ -81,4 +85,22 @@ public class Utils {
     public void setListChanged(boolean listChanged) {
         this.listChanged = listChanged;
     }
+
+    public ArrayList<Home> getPublicHomes() {
+        ArrayList<Home> publicHomes = new ArrayList<>();
+        getList().forEach(i -> {
+            if (!i.isPrivate()) publicHomes.add(i);
+        });
+        return publicHomes;
+    }
+
+    /*
+    IDEAS FOR GLOBAL HOMES:
+    /publish <name> - publishes a home
+    /unpublish <name>
+    /neighbourhood ?<name> - lists all the homes and lets you teleport to them
+
+    HashMap with invalid username string to store them
+
+     */
 }
