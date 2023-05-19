@@ -35,8 +35,7 @@ public class Utils {
     }
 
     public void addHome(Home i) {
-        ArrayList<Home> homes = values.get(i.getOwnerUsername());
-        if (homes == null) {homes = new ArrayList<>();}
+        ArrayList<Home> homes = getHomesFromUsername(i.getOwnerUsername());
         homes.add(i);
         values.put(i.getOwnerUsername(), homes);
         listChanged = true;
@@ -51,9 +50,7 @@ public class Utils {
     public ArrayList<Home> getList() {
         ArrayList<Home> allHomes = new ArrayList<>();
         for (ArrayList<Home> i : this.values.values()) {
-            for (Home j : i) {
-                allHomes.add(j);
-            }
+            allHomes.addAll(i);
         }
         return allHomes;
     }
@@ -67,6 +64,7 @@ public class Utils {
         for (Home i : getHomesFromUsername(owner)) {
             if (i.getHomeName().equals(homeName)) {
                 home = i;
+                break;
             }
         }
         if (home == null) {
@@ -92,6 +90,35 @@ public class Utils {
             if (!i.isPrivate()) publicHomes.add(i);
         });
         return publicHomes;
+    }
+
+    public boolean publishHome(Home i) {
+        i.setPrivate(false);
+        listChanged = true;
+        return true;
+    }
+
+    public boolean unpublishHome(Home i) {
+        if (i.isPrivate()) { return false; }
+        i.setPrivate(true);
+        listChanged = true;
+        return true;
+    }
+
+    public boolean globalContains(String s) {
+        for (Home i : getPublicHomes()) {
+            if (i.getHomeName().equals(s)) { return true; }
+        }
+        return false;
+    }
+
+    public Home getHomeFromName(String username, String home) {
+        for (Home i : getHomesFromUsername(username)) {
+            if (i.getHomeName().equals(home)) {
+                return i;
+            }
+        }
+        return null;
     }
 
     /*

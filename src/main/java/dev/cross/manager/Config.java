@@ -10,11 +10,11 @@ import java.io.*;
 
 public class Config {
 
-    public static Config INSTANCE;
+    private static Config INSTANCE;
 
     private long backupTimer = (long) (10 * 60000);
     private int maxHomesPerPlayer = 20;
-    private boolean globalHomes = false;
+    private boolean globalHomes = true;
 
     private static JSONObject configObject;
 
@@ -51,7 +51,7 @@ public class Config {
     private static void create() {
         JSONObject config = new JSONObject();
         config.put("homes_per_player", 20);
-        config.put("global_homes", false);
+        config.put("global_homes", true);
         config.put("backup_time", 10);
 
         File f = new File("world/homes");

@@ -1,5 +1,6 @@
 package dev.cross.commands;
 
+
 import com.bta.util.CommandHandler;
 import dev.cross.manager.Config;
 import dev.cross.manager.Home;
@@ -8,13 +9,11 @@ import net.minecraft.src.command.ChatColor;
 import net.minecraft.src.command.Command;
 import net.minecraft.src.command.CommandSender;
 import org.pf4j.Extension;
-
-
 @Extension
-public class PublicCommand implements CommandHandler {
+public class UnpublishCommand implements CommandHandler {
     @Override
     public Command command() {
-        return new Command("publish") {
+        return new Command("unpublish") {
             @Override
             public boolean execute(net.minecraft.src.command.CommandHandler commandHandler, CommandSender commandSender, String[] args) {
                 if (!Config.get().isGlobalHomes()) {
@@ -26,10 +25,10 @@ public class PublicCommand implements CommandHandler {
                 String homeName = args[0];
                 Home i = Utils.get().getHomeFromName(commandSender.getPlayer().username, homeName);
                 if (i == null) { commandSender.sendMessage(ChatColor.red + "You don't have any home called " + homeName + "."); return true; }
-                if (Utils.get().globalContains(homeName)) { commandSender.sendMessage(ChatColor.red + "Oops! Someone already is using that public home name."); return true; }
+                if (i.isPrivate()) { commandSender.sendMessage(ChatColor.red + "That home is already private."); }
 
-                Utils.get().publishHome(i);
-                commandSender.sendMessage(ChatColor.lime + "Your home has now been published.");
+                Utils.get().unpublishHome(i);
+                commandSender.sendMessage(ChatColor.lime + "Your home has now been" + ChatColor.red + " un-" + ChatColor.lime + "published.");
                 return true;
             }
 
@@ -40,7 +39,7 @@ public class PublicCommand implements CommandHandler {
 
             @Override
             public void sendCommandSyntax(net.minecraft.src.command.CommandHandler commandHandler, CommandSender commandSender) {
-                commandSender.sendMessage("/publish <name>");
+                commandSender.sendMessage("/unpublish <name>");
             }
         };
     }

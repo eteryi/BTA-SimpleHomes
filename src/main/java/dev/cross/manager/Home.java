@@ -6,7 +6,7 @@ public class Home {
 
     private final String homeName;
     private final Location location;
-    private final boolean isPrivate;
+    private boolean isPrivate;
     private final String ownerUsername;
     private final UUID homeUUID;
     public Home(String homeName, Location homeLocation, boolean isPrivate, String ownerUsername) {
@@ -42,5 +42,9 @@ public class Home {
 
     public boolean isPrivate() {
         return isPrivate;
+    }
+
+    public void setPrivate(boolean b) {
+        this.isPrivate = b;
     }
 }
